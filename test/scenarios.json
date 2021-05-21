@@ -1,0 +1,83 @@
+[
+  {
+    "price": "100",
+    "quantity": "100",
+    "editionId": "1",
+    "buyEdition": [
+      {
+        "reverts": false,
+        "revertMessage": "",
+        "editionId": "1",
+        "tokenId": "0",
+        "numSold": "1",
+        "balanceOf": "1",
+        "balanceAfterTransfer": "0"
+      },
+      {
+        "reverts": false,
+        "revertMessage": "",
+        "editionId": "1",
+        "tokenId": "1",
+        "numSold": "2",
+        "balanceOf": "2",
+        "balanceAfterTransfer": "1"
+      },
+      {
+        "reverts": true,
+        "revertsOn": 0,
+        "revertMessage": "Edition does not exist",
+        "editionId": "2",
+        "tokenId": "0",
+        "numSold": "0",
+        "balanceOf": "0",
+        "balanceAfterTransfer": "0"
+      },
+      {
+        "reverts": true,
+        "revertsOn": 0,
+        "revertMessage": "Edition does not exist",
+        "editionId": "3",
+        "tokenId": "0",
+        "numSold": "0",
+        "balanceOf": "0",
+        "balanceAfterTransfer": "0"
+      }
+    ]
+  },
+  {
+    "price": "100",
+    "quantity": "1",
+    "editionId": "1",
+    "buyEdition": [
+      {
+        "reverts": false,
+        "revertMessage": "",
+        "editionId": "1",
+        "tokenId": "0",
+        "numSold": "1",
+        "balanceOf": "1",
+        "balanceAfterTransfer": "0"
+      },
+      {
+        "reverts": true,
+        "revertsOn": 0,
+        "revertMessage": "Edition does not exist",
+        "editionId": "2",
+        "tokenId": "0",
+        "numSold": "0",
+        "balanceOf": "0",
+        "balanceAfterTransfer": "0"
+      },
+      {
+        "reverts": true,
+        "revertsOn": 1,
+        "revertMessage": "This edition is already sold out",
+        "editionId": "1",
+        "tokenId": "0",
+        "numSold": "0",
+        "balanceOf": "0",
+        "balanceAfterTransfer": "0"
+      }
+    ]
+  }
+]
