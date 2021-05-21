@@ -10,6 +10,12 @@ const NETWORK_MAP = {
 
 let isLocal = false;
 
+const baseURI = {
+  hardhat: "https://staging.mirror-api.com/",
+  rinkeby: "https://staging.mirror-api.com/",
+  mainnet: "https://mirror-api.com/",
+};
+
 async function main() {
   const chainId = (await waffle.provider.getNetwork()).chainId;
 
@@ -17,19 +23,15 @@ async function main() {
   const networkName = NETWORK_MAP[chainId];
 
   console.log(`Deploying to ${networkName}`);
+  console.log({ baseURI: baseURI[networkName] });
 
-  const Logic = await ethers.getContractFactory("CrowdfundLogic");
-  const logic = await Logic.deploy();
-  await logic.deployed();
-
-  const Factory = await ethers.getContractFactory("CrowdfundFactory");
-  const factory = await Factory.deploy(logic.address);
-  await factory.deployed();
+  const Editions = await ethers.getContractFactory("Editions");
+  const editions = await Editions.deploy(baseURI[networkName]);
+  await editions.deployed();
 
   const info = {
     Contracts: {
-      logic: logic.address,
-      factory: factory.address,
+      editions: editions.address,
     },
   };
 
