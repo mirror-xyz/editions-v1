@@ -89,6 +89,9 @@ abstract contract ERC165 is IERC165 {
     }
 }
 
+/**
+ * Based on: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol
+ */
 contract ERC721 is ERC165, IERC721 {
     mapping(uint256 => address) private _owners;
     mapping(address => uint256) private _balances;

@@ -8,7 +8,7 @@ import scenarios from "./scenarios.json";
 const name = "Mirror Editions";
 const symbol = "EDITIONS";
 
-const baseURI = "https://mirror-api.com";
+const baseURI = "https://mirror-api.com/";
 const deployEditions = async () => {
   const Editions = await ethers.getContractFactory("Editions");
   const editions = await Editions.deploy(baseURI);
@@ -89,8 +89,8 @@ describe("Editions", () => {
             expect(firstEdition.numSold.toString()).to.eq("0");
           });
 
-          it("uses 94359 gas to create edition", async () => {
-            expect(gasUsedForEdition.toString()).to.eq("94359");
+          it("uses 93421 gas to create edition", async () => {
+            expect(gasUsedForEdition.toString()).to.eq("93421");
           });
 
           describe("check ERC721 functions before minting", () => {
@@ -215,7 +215,7 @@ describe("Editions", () => {
                         const resp = await editionsContract.tokenURI(tokenId);
 
                         expect(resp).to.eq(
-                          `${baseURI}/${editionId}/${tokenId}`
+                          `${baseURI}${editionId}/${tokenId}`
                         );
                       });
                     });

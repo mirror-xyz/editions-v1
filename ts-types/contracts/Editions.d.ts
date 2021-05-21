@@ -553,14 +553,14 @@ export class Editions extends Contract {
       price: BigNumberish,
       fundingRecipient: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     "createEdition(uint256,uint256,address)"(
       quantity: BigNumberish,
       price: BigNumberish,
       fundingRecipient: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    ): Promise<void>;
 
     editions(
       arg0: BigNumberish,
