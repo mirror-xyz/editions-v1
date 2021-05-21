@@ -146,10 +146,9 @@ contract Editions is ERC721 {
     function _sendFunds(address payable recipient, uint256 amount) private {
         require(
             address(this).balance >= amount,
-            "Address: insufficient balance"
+            "Insufficient balance for send"
         );
 
-        // solhint-disable-next-line avoid-low-level-calls, avoid-call-value
         (bool success, ) = recipient.call{value: amount}("");
         require(success, "Unable to send value: recipient may have reverted");
     }
