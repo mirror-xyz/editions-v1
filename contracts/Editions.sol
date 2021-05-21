@@ -2,7 +2,6 @@
 pragma solidity 0.8.4;
 
 import {ERC721} from "./ERC721.sol";
-import {IERC721} from "./ERC721.sol";
 
 /**
  * @title Editions
