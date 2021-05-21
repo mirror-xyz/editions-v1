@@ -709,14 +709,14 @@ export class Editions extends Contract {
       quantity: null,
       price: null,
       fundingRecipient: null,
-      editionId: null
+      editionId: BigNumberish | null
     ): EventFilter;
 
     EditionPurchased(
-      editionId: null,
-      tokenId: null,
+      editionId: BigNumberish | null,
+      tokenId: BigNumberish | null,
       numSold: null,
-      buyer: null
+      buyer: string | null
     ): EventFilter;
 
     Transfer(
