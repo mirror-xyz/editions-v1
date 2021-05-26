@@ -12,7 +12,7 @@ let isLocal = false;
 
 const baseURI = {
   hardhat: "https://staging.mirror-api.com/",
-  rinkeby: "https://staging.mirror-api.com/",
+  rinkeby: "https://staging.mirror-api.com/editions/",
   mainnet: "https://mirror-api.com/",
 };
 

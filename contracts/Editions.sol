@@ -3,6 +3,8 @@ pragma solidity 0.8.4;
 
 import {ERC721} from "./ERC721.sol";
 
+import {console} from "hardhat/console.sol";
+
 /**
  * @title Editions
  * @author MirrorXYZ
@@ -28,7 +30,9 @@ contract Editions is ERC721 {
     // Mapping of edition id to descriptive data.
     mapping(uint256 => Edition) public editions;
     // Mapping of token id to edition id.
-    mapping(uint256 => uint256) private tokenToEdition;
+    mapping(uint256 => uint256) public tokenToEdition;
+    // The amount of funds that have already been withdrawn for a given edition.
+    mapping(uint256 => uint256) public withdrawnForEdition;
 
     // ============ Structs ============
 
@@ -112,10 +116,16 @@ contract Editions is ERC721 {
     // ============ Operational Methods ============
 
     function withdrawFunds(uint256 editionId) external {
-        _sendFunds(
-            editions[editionId].fundingRecipient,
-            editions[editionId].price * editions[editionId].numSold
-        );
+        uint256 remainingForEdition =
+            // The amount of revenue that has been generated for the edition so far.
+            (editions[editionId].price * editions[editionId].numSold) -
+                // Subtract the amount that has already been withdrawn.
+                withdrawnForEdition[editionId];
+
+        // Update that amount that has already been withdrawn for the edition.
+        withdrawnForEdition[editionId] += remainingForEdition;
+        // Send the amount that was remaining for the edition, to the funding recipient.
+        _sendFunds(editions[editionId].fundingRecipient, remainingForEdition);
     }
 
     // ============ NFT Methods ============

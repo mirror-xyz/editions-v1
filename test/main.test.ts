@@ -192,7 +192,7 @@ describe("Editions", () => {
                   });
 
                   it("increments the balance of the contract", async () => {
-                    const balance = await await provider.getBalance(
+                    const balance = await provider.getBalance(
                       editionsContract.address
                     );
 
@@ -209,19 +209,69 @@ describe("Editions", () => {
                         .connect(purchaser)
                         .withdrawFunds(editionId);
 
-                      const contractBalance = await await provider.getBalance(
+                      const contractBalance = await provider.getBalance(
                         editionsContract.address
                       );
                       // All the funds are extracted.
                       expect(contractBalance.toString()).to.eq("0");
 
-                      const recipientBalance = await await provider.getBalance(
+                      const recipientBalance = await provider.getBalance(
                         fundingRecipient.address
                       );
 
                       expect(recipientBalance.toString()).to.eq(
                         originalRecipientBalance.add(revenue)
                       );
+                    });
+
+                    describe("when called again immediately afterwards", () => {
+                      it("transfers funds to the fundingRecipient", async () => {
+                        let originalRecipientBalance = await provider.getBalance(
+                          fundingRecipient.address
+                        );
+
+                        await editionsContract
+                          .connect(purchaser)
+                          .withdrawFunds(editionId);
+
+                        let contractBalance = await provider.getBalance(
+                          editionsContract.address
+                        );
+                        // All the funds are extracted.
+                        expect(contractBalance.toString()).to.eq("0");
+
+                        let recipientBalance = await provider.getBalance(
+                          fundingRecipient.address
+                        );
+
+                        expect(recipientBalance.toString()).to.eq(
+                          originalRecipientBalance.add(revenue)
+                        );
+
+                        // Called twice!
+                        await editionsContract
+                          .connect(purchaser)
+                          .withdrawFunds(editionId);
+
+                        originalRecipientBalance = await provider.getBalance(
+                          fundingRecipient.address
+                        );
+
+                        contractBalance = await provider.getBalance(
+                          editionsContract.address
+                        );
+                        // All the funds are still extracted.
+                        expect(contractBalance.toString()).to.eq("0");
+
+                        recipientBalance = await provider.getBalance(
+                          fundingRecipient.address
+                        );
+
+                        expect(recipientBalance.toString()).to.eq(
+                          // The balance is unchanged.
+                          originalRecipientBalance
+                        );
+                      });
                     });
                   });
 

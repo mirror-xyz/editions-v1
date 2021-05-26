@@ -36,9 +36,11 @@ interface EditionsInterface extends ethers.utils.Interface {
     "setApprovalForAll(address,bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
+    "tokenToEdition(uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
     "withdrawFunds(uint256)": FunctionFragment;
+    "withdrawnForEdition(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
@@ -85,6 +87,10 @@ interface EditionsInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "tokenToEdition",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "tokenURI",
     values: [BigNumberish]
   ): string;
@@ -94,6 +100,10 @@ interface EditionsInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "withdrawFunds",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawnForEdition",
     values: [BigNumberish]
   ): string;
 
@@ -128,6 +138,10 @@ interface EditionsInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenToEdition",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
@@ -135,6 +149,10 @@ interface EditionsInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "withdrawFunds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawnForEdition",
     data: BytesLike
   ): Result;
 
@@ -311,6 +329,16 @@ export class Editions extends Contract {
 
     "symbol()"(overrides?: CallOverrides): Promise<[string]>;
 
+    tokenToEdition(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "tokenToEdition(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     tokenURI(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -344,6 +372,16 @@ export class Editions extends Contract {
       editionId: BigNumberish,
       overrides?: Overrides
     ): Promise<ContractTransaction>;
+
+    withdrawnForEdition(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    "withdrawnForEdition(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
   };
 
   approve(
@@ -487,6 +525,16 @@ export class Editions extends Contract {
 
   "symbol()"(overrides?: CallOverrides): Promise<string>;
 
+  tokenToEdition(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "tokenToEdition(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   "tokenURI(uint256)"(
@@ -517,6 +565,16 @@ export class Editions extends Contract {
     editionId: BigNumberish,
     overrides?: Overrides
   ): Promise<ContractTransaction>;
+
+  withdrawnForEdition(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  "withdrawnForEdition(uint256)"(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   callStatic: {
     approve(
@@ -660,6 +718,16 @@ export class Editions extends Contract {
 
     "symbol()"(overrides?: CallOverrides): Promise<string>;
 
+    tokenToEdition(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "tokenToEdition(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     "tokenURI(uint256)"(
@@ -690,6 +758,16 @@ export class Editions extends Contract {
       editionId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    withdrawnForEdition(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "withdrawnForEdition(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   filters: {
@@ -854,6 +932,16 @@ export class Editions extends Contract {
 
     "symbol()"(overrides?: CallOverrides): Promise<BigNumber>;
 
+    tokenToEdition(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "tokenToEdition(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     tokenURI(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -886,6 +974,16 @@ export class Editions extends Contract {
     "withdrawFunds(uint256)"(
       editionId: BigNumberish,
       overrides?: Overrides
+    ): Promise<BigNumber>;
+
+    withdrawnForEdition(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "withdrawnForEdition(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
@@ -1023,6 +1121,16 @@ export class Editions extends Contract {
 
     "symbol()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    tokenToEdition(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "tokenToEdition(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     tokenURI(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -1055,6 +1163,16 @@ export class Editions extends Contract {
     "withdrawFunds(uint256)"(
       editionId: BigNumberish,
       overrides?: Overrides
+    ): Promise<PopulatedTransaction>;
+
+    withdrawnForEdition(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "withdrawnForEdition(uint256)"(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

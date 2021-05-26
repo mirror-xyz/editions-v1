@@ -444,14 +444,14 @@ contract Editions is ERC721 {
         uint256 quantity,
         uint256 price,
         address fundingRecipient,
-        uint256 editionId
+        uint256 indexed editionId
     );
 
     event EditionPurchased(
-        uint256 editionId,
-        uint256 tokenId,
+        uint256 indexed editionId,
+        uint256 indexed tokenId,
         uint256 numSold,
-        address buyer
+        address indexed buyer
     );
 
     // ============ Constructor ============
