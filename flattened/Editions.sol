@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity 0.8.4;
 
-// File contracts/ERC721.sol
-
 interface IERC721 {
     event Transfer(
         address indexed from,
@@ -408,23 +406,6 @@ contract Editions is ERC721 {
     string public constant name = "Mirror Editions";
     string public constant symbol = "EDITIONS";
 
-    // ============ Immutable Storage ============
-
-    // The URI for the API that serves the content for each token.
-    string internal baseURI;
-
-    // Editions start at 1, so that unsold tokens don't map to the first edition.
-    uint256 private nextEditionId = 1;
-
-    // ============ Mutable Storage ============
-
-    // Increments with each token purchased, globally across editions.
-    uint256 private nextTokenId;
-    // Mapping of edition id to descriptive data.
-    mapping(uint256 => Edition) public editions;
-    // Mapping of token id to edition id.
-    mapping(uint256 => uint256) private tokenToEdition;
-
     // ============ Structs ============
 
     struct Edition {
@@ -432,11 +413,30 @@ contract Editions is ERC721 {
         uint256 quantity;
         // The price at which each token will be sold, in ETH.
         uint256 price;
-        // The address able to withdraw sales revenue.
+        // The account that will receive sales revenue.
         address payable fundingRecipient;
-        // The number of tokens that has been sold at any given time.
+        // The number of tokens sold so far.
         uint256 numSold;
     }
+
+    // ============ Immutable Storage ============
+
+    // The URI for the API that serves the content for each token.
+    // Note: Strings cannot be literally immutable.
+    string internal baseURI;
+
+    // ============ Mutable Storage ============
+
+    // Mapping of edition id to descriptive data.
+    mapping(uint256 => Edition) public editions;
+    // Mapping of token id to edition id.
+    mapping(uint256 => uint256) public tokenToEdition;
+    // The amount of funds that have already been withdrawn for a given edition.
+    mapping(uint256 => uint256) public withdrawnForEdition;
+    // `nextTokenId` increments with each token purchased, globally across all editions.
+    uint256 private nextTokenId;
+    // Editions start at 1, in order that unsold tokens don't map to the first edition.
+    uint256 private nextEditionId = 1;
 
     // ============ Events ============
 
@@ -450,7 +450,9 @@ contract Editions is ERC721 {
     event EditionPurchased(
         uint256 indexed editionId,
         uint256 indexed tokenId,
+        // `numSold` at time of purchase represents the "serial number" of the NFT.
         uint256 numSold,
+        // The account that paid for and received the NFT.
         address indexed buyer
     );
 
@@ -463,8 +465,11 @@ contract Editions is ERC721 {
     // ============ Edition Methods ============
 
     function createEdition(
+        // The number of tokens that can be minted and sold.
         uint256 quantity,
+        // The price to purchase a token.
         uint256 price,
+        // The account that should receive the revenue.
         address payable fundingRecipient
     ) external {
         editions[nextEditionId] = Edition({
@@ -480,18 +485,24 @@ contract Editions is ERC721 {
     }
 
     function buyEdition(uint256 editionId) external payable {
-        require(
-            msg.value >= editions[editionId].price,
-            "Must send enough to purchase the edition."
-        );
+        // Check that the edition exists. Note: this is redundant
+        // with the next check, but it is useful for clearer error messaging.
         require(editions[editionId].quantity > 0, "Edition does not exist");
+        // Check that there are still tokens available to purchase.
         require(
             editions[editionId].numSold < editions[editionId].quantity,
             "This edition is already sold out."
         );
-
+        // Check that the sender is paying the correct amount.
+        require(
+            msg.value == editions[editionId].price,
+            "Must send enough to purchase the edition."
+        );
+        // Increment the number of tokens sold for this edition.
         editions[editionId].numSold++;
+        // Mint a new token for the sender, using the `nextTokenId`.
         _mint(msg.sender, nextTokenId);
+        // Store the mapping of token id to the edition being purchased.
         tokenToEdition[nextTokenId] = editionId;
 
         emit EditionPurchased(
@@ -507,15 +518,22 @@ contract Editions is ERC721 {
     // ============ Operational Methods ============
 
     function withdrawFunds(uint256 editionId) external {
-        _sendFunds(
-            editions[editionId].fundingRecipient,
-            editions[editionId].price * editions[editionId].numSold
-        );
+        // Compute the amount available for withdrawing from this edition.
+        uint256 remainingForEdition =
+            // Compute total amount of revenue that has been generated for the edition so far.
+            (editions[editionId].price * editions[editionId].numSold) -
+                // Subtract the amount that has already been withdrawn.
+                withdrawnForEdition[editionId];
+
+        // Update that amount that has already been withdrawn for the edition.
+        withdrawnForEdition[editionId] += remainingForEdition;
+        // Send the amount that was remaining for the edition, to the funding recipient.
+        _sendFunds(editions[editionId].fundingRecipient, remainingForEdition);
     }
 
     // ============ NFT Methods ============
 
-    // Returns e.g. https://nft.mirror.xyz/[editionId]/[tokenId]
+    // Returns e.g. https://mirror-api.com/editions/[editionId]/[tokenId]
     function tokenURI(uint256 tokenId)
         public
         view
@@ -524,7 +542,7 @@ contract Editions is ERC721 {
     {
         // If the token does not map to an edition, it'll be 0.
         require(tokenToEdition[tokenId] > 0, "Token has not been sold yet");
-
+        // Concatenate the components, baseURI, editionId and tokenId, to create URI.
         return
             string(
                 abi.encodePacked(
