@@ -26,6 +26,7 @@ interface EditionsInterface extends ethers.utils.Interface {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "buyEdition(uint256)": FunctionFragment;
+    "contractURI()": FunctionFragment;
     "createEdition(uint256,uint256,address)": FunctionFragment;
     "editions(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
@@ -51,6 +52,10 @@ interface EditionsInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "buyEdition",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "contractURI",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "createEdition",
@@ -110,6 +115,10 @@ interface EditionsInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "buyEdition", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "contractURI",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "createEdition",
     data: BytesLike
@@ -213,6 +222,10 @@ export class Editions extends Contract {
       editionId: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<ContractTransaction>;
+
+    contractURI(overrides?: CallOverrides): Promise<[string]>;
+
+    "contractURI()"(overrides?: CallOverrides): Promise<[string]>;
 
     createEdition(
       quantity: BigNumberish,
@@ -413,6 +426,10 @@ export class Editions extends Contract {
     overrides?: PayableOverrides
   ): Promise<ContractTransaction>;
 
+  contractURI(overrides?: CallOverrides): Promise<string>;
+
+  "contractURI()"(overrides?: CallOverrides): Promise<string>;
+
   createEdition(
     quantity: BigNumberish,
     price: BigNumberish,
@@ -605,6 +622,10 @@ export class Editions extends Contract {
       editionId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    contractURI(overrides?: CallOverrides): Promise<string>;
+
+    "contractURI()"(overrides?: CallOverrides): Promise<string>;
 
     createEdition(
       quantity: BigNumberish,
@@ -834,6 +855,10 @@ export class Editions extends Contract {
       overrides?: PayableOverrides
     ): Promise<BigNumber>;
 
+    contractURI(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "contractURI()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     createEdition(
       quantity: BigNumberish,
       price: BigNumberish,
@@ -1019,6 +1044,10 @@ export class Editions extends Contract {
       editionId: BigNumberish,
       overrides?: PayableOverrides
     ): Promise<PopulatedTransaction>;
+
+    contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "contractURI()"(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     createEdition(
       quantity: BigNumberish,

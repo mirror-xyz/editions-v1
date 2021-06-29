@@ -9,7 +9,7 @@ const symbol = "EDITIONS";
 
 const { provider } = waffle;
 
-const baseURI = "https://mirror-api.com/";
+const baseURI = "https://mirror-api.com/editions/";
 const deployEditions = async () => {
   const Editions = await ethers.getContractFactory("Editions");
   const editions = await Editions.deploy(baseURI);
@@ -34,6 +34,11 @@ describe("Editions", () => {
     it("deploys editions with basic attributes", async () => {
       expect(await editionsContract.name()).to.eq(name);
       expect(await editionsContract.symbol()).to.eq(symbol);
+    });
+
+    it("has a contract URI", async () => {
+      const contractURI = await editionsContract.contractURI();
+      expect(contractURI).to.eq("https://mirror-api.com/editions/metadata");
     });
 
     for (let x = 0; x < scenarios.length; x++) {

@@ -161,6 +161,12 @@ contract Editions is ERC721 {
             );
     }
 
+    // Returns e.g. https://mirror-api.com/editions/metadata
+    function contractURI() public view returns (string memory) {
+        // Concatenate the components, baseURI, editionId and tokenId, to create URI.
+        return string(abi.encodePacked(baseURI, "metadata"));
+    }
+
     // ============ Private Methods ============
 
     function _sendFunds(address payable recipient, uint256 amount) private {
